@@ -31,6 +31,7 @@ end
 
 SPL=nan(1,length(allfiles));
 ABRpics=nan(1,length(allfiles));
+calib_pics= nan(1,length(allfiles));
 
 for i=1:length(allfiles)
     filename=allfiles(i).name;
@@ -46,6 +47,23 @@ for i=1:length(allfiles)
     if SPL(i)<=abr_Stimuli.maxdB2analyze+2
         ABRpics(i)=str2double(allfiles(i).name(2:5));
     end
+    % Have to make things backward compatile. There are atleast three ways
+    % in which ABRs have been stored. (1) Very old (x.Stimuli does not have
+    % the field "MaxdBSPLCalib"). (2)  Old (x.Stimuli does not have
+    % the field "calibPicNum", but has "MaxdBSPLCalib") (3) New (x.Stimuli
+    % has the fields "calibPicNum" and "MaxdBSPLCalib").
+    
+    if isfield(x.Stimuli, 'calibPicNum')
+        calib_pics(i)= x.Stimuli.calibPicNum;
+    else
+        allcalfiles=dir('p*calib*');
+        calib_pics(i)= getPicNum(allcalfiles(1).name);
+    end
+end
+if numel(unique(calib_pics))~=1
+    error('All ABR pics should have the same calib pics');
+elseif unique(calib_pics)~=str2double(abr_Stimuli.cal_pic)
+    error('Update calib pic num to %d', unique(calib_pics));
 end
 
 ABRpics(isnan(ABRpics))=[];

@@ -5,14 +5,27 @@ ax2  = cell2struct(cell(1,3),{'axes','xlab','ylab'},2);
 abrs  = cell2struct(cell(1,10),{'abr1','abr2','abr3','abr4','abr5','abr6','abr7','abr8','abr9','abr10'},2);
 abr_FIG = struct('handle',[],'push',push,'ax1',ax1,'ax2',ax2,'abrs',abrs,'parm_text',[],'dir_text',[]);
 
-abr_Stimuli = struct('cal_pic','1', ...
+
+NEL1.start_plot= 10;
+NEL1.end_plot= 30;
+NEL1.start_template = 12.20;
+NEL1.end_template   = 20.00;
+
+NEL2.start_plot= 10;
+NEL2.end_plot= 30;
+NEL2.start_template = 3.00;
+NEL2.end_template   = 10.80;
+
+NEL2use= NEL1;
+
+abr_Stimuli = struct('cal_pic','2', ...
 	'abr_pic','27-33,37', ...
-	'start', 4.00, ...
-	'end',20.00, ...
-	'start_template', 6.20, ...
-	'end_template',14.00, ...
+	'start', NEL2use.start_plot, ...
+	'end',NEL2use.end_plot, ...
+	'start_template', NEL2use.start_template, ...
+	'end_template',NEL2use.end_template, ...
 	'num_templates', 2.00, ...
-	'dir','SP-2016_07_04-Q265-Baseline',...
+	'dir','SP-2018_12_04-Q370_baseline_NH_pre',...
     'maxdB2analyze',60);
 
 if ~exist('abr_Stimuli','var')||~isfield(abr_Stimuli, 'cal_pic')
@@ -46,9 +59,11 @@ abr_FIG.push.trou4 = uicontrol(abr_FIG.handle,'callback','abr_analysis4(''trou4'
 abr_FIG.push.peak5 = uicontrol(abr_FIG.handle,'callback','abr_analysis4(''peak5'');','style','pushbutton','Units','normalized','position',[0.45 0.21 0.02125 0.03],'string','P(5)');
 abr_FIG.push.trou5 = uicontrol(abr_FIG.handle,'callback','abr_analysis4(''trou5'');','style','pushbutton','Units','normalized','position',[0.45 0.175 0.02125 0.03],'string','N(5)');
 
-abr_FIG.push.autofind = uicontrol(abr_FIG.handle,'callback','abr_analysis4(''autofind'');','style','pushbutton','Units','normalized','position',[0.35 0.14 0.1 0.03],'string','AutoFind');
-abr_FIG.push.print   = uicontrol(abr_FIG.handle,'callback','abr_analysis4(''print'');','style','pushbutton','Units','normalized','position',[0.35 0.085 0.1 0.03],'string','Print');
-abr_FIG.push.file   = uicontrol(abr_FIG.handle,'callback','abr_analysis4(''file'');','style','pushbutton','Units','normalized','position',[.35 0.05 0.1 0.03],'string','Save as File');
+abr_FIG.push.autofind = uicontrol(abr_FIG.handle,'callback','abr_analysis4(''autofind'');','style','pushbutton','Units','normalized','position',[0.35 0.14 0.075 0.03],'string','AutoFind');
+abr_FIG.push.print   = uicontrol(abr_FIG.handle,'callback','abr_analysis4(''print'');','style','pushbutton','Units','normalized','position',[0.35 0.085 0.075 0.03],'string','Print');
+abr_FIG.push.file    = uicontrol(abr_FIG.handle,'callback','abr_analysis4(''file'');','style','pushbutton','Units','normalized','position',[.35 0.05 0.075 0.03],'string','Save as File');
+% abr_FIG.push.rm_rect = uicontrol(abr_FIG.handle,'callback','abr_analysis4(''rm_rect'');','style','pushbutton','Units','normalized','position',[.43 0.05 0.05 0.03],'string','NEL2-rect');
+han.rm_rect          = uicontrol(abr_FIG.handle,'callback','abr_analysis4(''rm_rect'');','style','checkbox','Units','normalized','position',[.43 0.05 0.05 0.03],'String','NEL2-rect','Value',0,'BackgroundColor','w');
 
 abr_FIG.push.edit    = uicontrol(abr_FIG.handle,'style','edit', 'callback', 'abr_analysis4(''edit'');','Units','normalized','position',[.22 .05 .1 .04],'string','','FontSize',12);
 

@@ -2,11 +2,18 @@ function abr_analysis4(command_str,parm_num)
 
 %This function computes an ABR threshold based on series of AVERAGER files.
 
-global paramsIN abr_FIG abr_Stimuli abr_root_dir abr_data_dir hearingStatus animal data han invert abr_out_dir freq date
+global abr paramsIN abr_FIG abr_Stimuli abr_root_dir abr_data_dir hearingStatus animal data han invert abr_out_dir freq date dt forVijay
 
 abr_root_dir = '/media/parida/DATAPART1/Matlab/ABR/Matlab_ABR';
-abr_data_dir = '/media/parida/DATAPART1/Matlab/ExpData/Baselines/';
-abr_out_dir= '/media/parida/DATAPART1/Matlab/ABR/Output/';
+forVijay= 0;
+if forVijay
+    abr_data_dir = '/media/parida/DATAPART1/Matlab/ExpData/VijayaData/UB ABR data/';
+    abr_out_dir= '/media/parida/DATAPART1/Matlab/ExpData/VijayaData/UB_OUT_data/';
+    warning('For Vijay');
+else
+    abr_data_dir = '/media/parida/DATAPART1/Matlab/ExpData/Baselines/';
+    abr_out_dir= '/media/parida/DATAPART1/Matlab/ABR/Output/';
+end
 
 paramsIN.abr_root_dir= abr_root_dir;
 paramsIN.abr_root_dir= abr_root_dir;
@@ -109,11 +116,14 @@ elseif strcmp(command_str,'directory')
     
     if strcmp(get(han.abr_panel,'Box'),'off')
         animal= cell2mat(cellfun(@(x) sscanf(char(x{1}), '-Q%d*'), regexp(abr_Stimuli.dir,'(-Q\d+_)','tokens'), 'UniformOutput', 0));
+        
         paramsIN.animal= animal;
         if contains(lower(abr_Stimuli.dir), {'nh', 'pre'})
             hearingStatus = 'NH';
         elseif contains(lower(abr_Stimuli.dir), {'hi', 'pts', 'tts', 'post'})
             hearingStatus= 'HI';
+        elseif contains(lower(abr_Stimuli.dir), {'ca', 'carbo'})
+            hearingStatus= 'CA';
         end
         paramsIN.hearingStatus= hearingStatus;
         axes(han.text_panel);
@@ -249,8 +259,12 @@ elseif strcmp(command_str,'autofind')
     
 elseif strcmp(command_str,'print')
     set(gcf,'PaperOrientation','portrait');
-    curChinDir= strrep(strcat(abr_out_dir, 'Q',num2str(animal),'_',hearingStatus,'_',date, filesep), '-', '_');
-    if ~isdir(curChinDir)
+    if ~forVijay
+        curChinDir= strrep(strcat(abr_out_dir, 'Q',num2str(animal),'_',hearingStatus,'_',date, filesep), '-', '_');
+    else
+        curChinDir= strrep(strcat(abr_out_dir, abr_Stimuli.dir, filesep), '-', '_');;
+    end
+    if ~isfolder(curChinDir)
         mkdir(curChinDir);
     end
     if freq~=0
@@ -272,8 +286,8 @@ elseif strcmp(command_str,'file')
     else
         msgbox('Data not saved')
     end
-    
-elseif strcmp(command_str,'edit') % added by GE 15Apr2004
+       
+elseif strcmp(command_str,'edit') % added by GE 15Apr1996
     
 elseif strcmp(command_str,'close')
     update_params3;

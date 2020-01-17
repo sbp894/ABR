@@ -1,14 +1,19 @@
 function save_file2
 
-global num freq spl animal date freq_level data abr ABRmag w hearingStatus abr_out_dir
+global num freq spl animal date freq_level data abr ABRmag w hearingStatus abr_out_dir forVijay abr_Stimuli
 
 filename = strcat('Q',num2str(animal),'_',hearingStatus,'_',date);
 figure(22); set(gcf,'Units','normalized','Position',[0.5 0.5 0.2 0.1])
 text(0,0,['saving to file:' filename])
 axis off; pause(0.5); close(22);
 
-curChinDir= strrep(strcat(abr_out_dir, 'Q',num2str(animal),'_',hearingStatus,'_',date, filesep), '-', '_');
-if ~isdir(curChinDir)
+if ~forVijay
+    curChinDir= strrep(strcat(abr_out_dir, 'Q',num2str(animal),'_',hearingStatus,'_',date, filesep), '-', '_');
+else
+    curChinDir= strrep(strcat(abr_out_dir, abr_Stimuli.dir, filesep), '-', '_');;
+end
+
+if ~isfolder(curChinDir)
     mkdir(curChinDir);
 end
 
